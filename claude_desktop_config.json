@@ -1,0 +1,84 @@
+{
+  "mcpServers": {
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "YOUR_BRAVE_API_KEY"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_GITHUB_PERSONAL_ACCESS_TOKEN"
+      }
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "env": {
+        "PUPPETEER_USER_DATA_DIR": "/Users/username/Library/Application Support/Google/Chrome/Profile 1",
+        "PUPPETEER_CHANNEL": "chrome",
+        "PUPPETEER_EXECUTABLE_PATH": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+      }
+    },
+    "basic-memory": {
+      "command": "/Users/username/Library/Application Support/Claude/venv/bin/basic-memory",
+      "args": [
+        "mcp"
+      ]
+    },
+    "filesystem": {
+      "command": "/usr/local/bin/npx",
+      "args": [
+        "@modelcontextprotocol/server-filesystem",
+        "/path/to/filesystem"
+      ],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "browserbase": {
+      "command": "node",
+      "args": [
+        "path/to/mcp-server-browserbase/browserbase/dist/index.js"
+      ],
+      "env": {
+        "BROWSERBASE_API_KEY": "YOUR_BROWSERBASE_API_KEY",
+        "BROWSERBASE_PROJECT_ID": "YOUR_BROWSERBASE_PROJECT_ID"
+      }
+    },
+    "memory-box-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@amotivv/memory-box-mcp",
+        "--key",
+        "YOUR_API_KEY"
+      ]
+    },
+    "memory-bank-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@alioshr/memory-bank-mcp",
+        "--key",
+        "YOUR_API_KEY"
+      ]
+    }
+  }
+}
