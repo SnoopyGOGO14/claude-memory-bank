@@ -1,0 +1,9 @@
+python-dotenv>=1.0.0
+PyPDF2>=3.0.0
+requests>=2.31.0
+tk>=0.1.0
+tkinterdnd2>=0.3.0
+importlib-metadata>=7.0.0
+importlib-resources>=6.1.0
+sqlite3-api>=0.1.0
+mem0>=0.1.0; platform_system != "Windows" 
