@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Interface</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="/static/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-robot me-2"></i>Agent Interface
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/library">Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/memory">Memory</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="container-fluid">
+        <div class="row" style="height: calc(100vh - 56px);">
+            <!-- Agent selector sidebar -->
+            <div class="col-lg-3 col-md-4 mb-3 mb-md-0">
+                <div class="agent-selector">
+                    <h5><i class="bi bi-list-check me-2"></i>Available Agents</h5>
+                    <div id="agent-list" class="agent-list">
+                        <!-- Agent list will be populated dynamically -->
+                        <div class="d-flex justify-content-center my-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat container -->
+            <div class="col-lg-9 col-md-8">
+                <div class="chat-container">
+                    <div id="chat-header" class="chat-header">
+                        <i class="bi bi-chat-dots me-2"></i>Select an agent to start chatting
+                    </div>
+                    <div id="chat-messages" class="chat-messages">
+                        <!-- Messages will be populated dynamically -->
+                        <div class="message agent-message text-center opacity-50">
+                            Please select an agent from the list to begin a conversation.
+                        </div>
+                    </div>
+                    <div class="input-area">
+                        <div class="input-group">
+                            <input type="text" id="message-input" class="form-control" placeholder="Type your message here..." disabled>
+                            <button id="send-button" class="btn btn-primary" disabled>
+                                <i class="bi bi-send"></i> Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="/static/js/main.js"></script>
+</body>
+</html> 

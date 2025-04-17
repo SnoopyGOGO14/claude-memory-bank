@@ -5,23 +5,24 @@ from dotenv import load_dotenv
 MEM0_AVAILABLE = False
 
 def check_mem0_available():
-    """Check if the mem0 module is available without attempting to import it"""
-    global MEM0_AVAILABLE
+    """
+    Check if the Mem0 package is available.
+    Returns False since we know it's not installed.
+    """
     try:
         import importlib.util
-        spec = importlib.util.find_spec("mem0")
-        MEM0_AVAILABLE = spec is not None
-    except ImportError:
-        MEM0_AVAILABLE = False
-    return MEM0_AVAILABLE
+        spec = importlib.util.find_spec('mem0')
+        return spec is not None
+    except:
+        return False
 
 def get_mem0_client():
-    """Initializes and returns a Mem0 client based on environment variables."""
-    if not check_mem0_available():
-        raise ImportError("The mem0 module is not installed")
-    from mem0 import Mem0
-    load_dotenv()
-    return Mem0(config={})
+    """
+    Get a Mem0 client instance.
+    Currently returns None as the mem0 package is not installed.
+    """
+    print("Warning: Mem0 client not available - package not installed")
+    return None
 
 def get_agent_config():
     """Get a configuration dictionary with all settings needed for agents"""

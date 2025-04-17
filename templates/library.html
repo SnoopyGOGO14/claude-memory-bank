@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>Library Agent - Document Management</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/library.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="library-container">
+    <div class="library-header">
+        <h1>Document Library</h1>
+        <div class="library-actions">
+            <button id="btn-refresh-stats" class="btn" title="Refresh statistics">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+    </div>
+
+    <div class="library-main">
+        <div class="library-sidebar">
+            <div class="stats-section">
+                <h2>Statistics</h2>
+                <div id="stats-container">
+                    <div class="stats-loading">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions-section">
+                <h2>Actions</h2>
+                
+                <div class="action-group">
+                    <h3>Scan Directory</h3>
+                    <div class="action-form">
+                        <input type="text" id="scan-directory" placeholder="Enter directory path">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="include-subfolders" checked>
+                            <label for="include-subfolders">Include subfolders</label>
+                        </div>
+                        <button id="btn-scan" class="btn">Scan Directory</button>
+                        <button id="btn-scan-default" class="btn">Scan Default Folder</button>
+                    </div>
+                </div>
+                
+                <div class="action-group">
+                    <h3>Search</h3>
+                    <div class="action-form">
+                        <input type="text" id="search-query" placeholder="Enter search query">
+                        <button id="btn-search" class="btn">Search</button>
+                    </div>
+                </div>
+                
+                <div class="action-group">
+                    <h3>Upload Files</h3>
+                    <div class="action-form">
+                        <div id="drop-zone" class="file-drop-zone">
+                            <p>Drag and drop files here</p>
+                            <p>OR</p>
+                            <button id="btn-file-select" class="btn">Select Files</button>
+                            <input type="file" id="file-upload" multiple style="display: none;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-group">
+                    <h3>Logs</h3>
+                    <div id="status-messages" class="status-panel">
+                        <!-- Log messages will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="library-content">
+            <div class="content-header">
+                <div class="filter-section">
+                    <select id="organization-filter">
+                        <option value="All">All Organizations</option>
+                    </select>
+                    <select id="filetype-filter">
+                        <option value="All">All File Types</option>
+                    </select>
+                </div>
+                <div class="results-count">
+                    <span id="results-count">0 documents</span>
+                </div>
+            </div>
+            <div id="loading" class="loading-indicator" style="display: none;">Loading...</div>
+            <div id="document-container" class="document-list">
+                <div class="empty-message">No documents to display. Use the sidebar to scan or upload documents.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/library.js') }}"></script>
+{% endblock %} 

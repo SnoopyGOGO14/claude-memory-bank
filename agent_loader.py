@@ -5,6 +5,9 @@ import importlib
 import sqlite3
 from dotenv import load_dotenv
 from typing import Dict, Any, Optional, Union, List
+import json
+import importlib.util
+import sys
 
 # Import utility functions
 from mcp_utils import get_mem0_client, check_mem0_available
@@ -18,8 +21,7 @@ DB_PATH = os.path.join(SCRIPT_DIR, "library.db")
 
 class AgentLoader:
     """
-    AgentLoader provides a unified interface to load and access various agents
-    in the system. It dynamically loads agent modules based on configuration.
+    Simple agent loader for demo purposes
     """
     
     def __init__(self):
@@ -29,120 +31,23 @@ class AgentLoader:
         
     def load_config(self):
         """Load agent configuration from environment variables"""
-        # Check if mem0 is available
-        mem0_available = check_mem0_available()
-        
         self.config = {
             "knowledge_root": os.getenv("KNOWLEDGE_ROOT", "/Volumes/1TB Kingston Sata/Sovereign AI"),
             "target_folder": os.getenv("TARGET_FOLDER", "/Volumes/1TB Kingston Sata/Sovereign AI/CLAUDE_MEMORY_BANK"),
-            "db_path": os.getenv("DB_PATH", DB_PATH),
-            "llm_provider": os.getenv("LLM_PROVIDER", "openai"),
-            "llm_api_key": os.getenv("LLM_API_KEY"),
-            "llm_base_url": os.getenv("LLM_BASE_URL"),
-            "llm_model": os.getenv("LLM_CHOICE", "gpt-4o-mini"),
-            "embedding_model": os.getenv("EMBEDDING_MODEL_CHOICE", "text-embedding-3-small"),
-            "groq_api_key": os.getenv("GROQ_API_KEY"),
             "available_agents": os.getenv("AVAILABLE_AGENTS", "library").split(","),
-            "mem0_available": mem0_available
         }
     
     def get_agent(self, agent_name: str) -> Any:
         """
-        Get an instance of the specified agent.
-        If the agent is already loaded, returns the existing instance.
-        Otherwise, attempts to load and initialize the agent.
-        
-        Args:
-            agent_name (str): Name of the agent to load
-            
-        Returns:
-            Any: The agent instance if found, None otherwise
+        Dummy get_agent method - not actually used in this demo
         """
-        if agent_name in self.agents:
-            return self.agents[agent_name]
-        
-        if agent_name not in self.config["available_agents"]:
-            raise ValueError(f"Agent '{agent_name}' is not configured as an available agent")
-        
-        try:
-            if agent_name == "library":
-                return self._load_library_agent()
-            else:
-                # Dynamic loading for future agent types
-                module_name = f"{agent_name}_agent"
-                try:
-                    module = importlib.import_module(module_name)
-                    agent_class = getattr(module, f"{agent_name.title()}Agent")
-                    self.agents[agent_name] = agent_class(self.config)
-                    return self.agents[agent_name]
-                except (ImportError, AttributeError) as e:
-                    print(f"Error loading agent '{agent_name}': {str(e)}")
-                    return None
-        except Exception as e:
-            print(f"Error initializing agent '{agent_name}': {str(e)}")
-            return None
-    
-    def _load_library_agent(self) -> Any:
-        """
-        Load the library agent based on available implementations
-        """
-        try:
-            # Try to import the library agent module
-            from library_agent_v2 import DatabaseManager
-            
-            # Initialize the database manager
-            db_manager = DatabaseManager()
-            self.agents["library"] = db_manager
-            return db_manager
-        except ImportError:
-            try:
-                # Fallback to the basic agent library
-                import agent_library
-                self.agents["library"] = agent_library
-                return agent_library
-            except ImportError:
-                print("Could not load any library agent implementation")
-                return None
+        return None
     
     def get_all_agents(self) -> Dict[str, Any]:
         """
-        Get all available agents
-        
-        Returns:
-            Dict[str, Any]: Dictionary of agent name -> agent instance
+        Get all available agents - not actually used in this demo
         """
-        # Lazy load all configured agents
-        for agent_name in self.config["available_agents"]:
-            if agent_name not in self.agents:
-                self.get_agent(agent_name)
-        
         return self.agents
-    
-    def get_db_connection(self) -> sqlite3.Connection:
-        """
-        Get a connection to the SQLite database
-        
-        Returns:
-            sqlite3.Connection: Database connection
-        """
-        return sqlite3.connect(self.config["db_path"])
-    
-    def get_mem0(self):
-        """
-        Get a Mem0 client for memory operations
-        
-        Returns:
-            Mem0: Initialized Mem0 client or None if not available
-        """
-        if not self.config["mem0_available"]:
-            print("Warning: Mem0 is not available. The 'mem0' package is not installed.")
-            return None
-            
-        try:
-            return get_mem0_client()
-        except Exception as e:
-            print(f"Error initializing Mem0 client: {str(e)}")
-            return None
 
 # Singleton instance for easy access
 _loader = None
@@ -150,9 +55,6 @@ _loader = None
 def get_loader() -> AgentLoader:
     """
     Get the singleton AgentLoader instance
-    
-    Returns:
-        AgentLoader: The loader instance
     """
     global _loader
     if _loader is None:
@@ -162,24 +64,150 @@ def get_loader() -> AgentLoader:
 # Convenience functions
 def get_agent(agent_name: str) -> Any:
     """
-    Get an agent by name
-    
-    Args:
-        agent_name (str): Name of the agent to get
-        
-    Returns:
-        Any: The agent instance
+    Get an agent by name - dummy function for this demo
     """
-    return get_loader().get_agent(agent_name)
+    return None
 
 def get_library_agent():
     """
-    Get the library agent
-    
-    Returns:
-        Any: The library agent instance
+    Get the library agent - dummy function for this demo
     """
-    return get_loader().get_agent("library")
+    return None
+
+def load_agent_from_dir(agent_dir: str) -> Dict[str, Any]:
+    """
+    Load an agent from a directory containing agent files.
+    
+    Args:
+        agent_dir: Path to the directory containing agent files
+        
+    Returns:
+        Dictionary containing agent data and functions
+    """
+    if not os.path.isdir(agent_dir):
+        raise ValueError(f"Agent directory does not exist: {agent_dir}")
+    
+    # Check for config.json
+    config_path = os.path.join(agent_dir, "config.json")
+    if not os.path.exists(config_path):
+        raise ValueError(f"Missing config.json in agent directory: {agent_dir}")
+    
+    # Load config
+    try:
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+    except json.JSONDecodeError:
+        raise ValueError(f"Invalid JSON in config file: {config_path}")
+    
+    # Check for required config fields
+    required_fields = ["name", "description", "version"]
+    for field in required_fields:
+        if field not in config:
+            raise ValueError(f"Missing required field '{field}' in config: {config_path}")
+    
+    # Check for agent.py
+    agent_py_path = os.path.join(agent_dir, "agent.py")
+    if not os.path.exists(agent_py_path):
+        raise ValueError(f"Missing agent.py in agent directory: {agent_dir}")
+    
+    # Load agent.py module
+    try:
+        spec = importlib.util.spec_from_file_location("agent_module", agent_py_path)
+        if spec is None or spec.loader is None:
+            raise ValueError(f"Could not load agent module: {agent_py_path}")
+        
+        agent_module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = agent_module
+        spec.loader.exec_module(agent_module)
+        
+        # Check if required functions are defined
+        if not hasattr(agent_module, "process_command"):
+            raise ValueError(f"Missing required function 'process_command' in agent module: {agent_py_path}")
+        
+        # Create agent object
+        agent = {
+            "config": config,
+            "dir": agent_dir,
+            "process_command": agent_module.process_command
+        }
+        
+        # Add optional functions if they exist
+        optional_functions = ["initialize", "cleanup", "get_status"]
+        for func_name in optional_functions:
+            if hasattr(agent_module, func_name):
+                agent[func_name] = getattr(agent_module, func_name)
+        
+        # Initialize agent if function exists
+        if "initialize" in agent:
+            agent["initialize"](agent)
+        
+        return agent
+    
+    except Exception as e:
+        raise ValueError(f"Error loading agent module: {str(e)}")
+
+
+def load_agent_from_file(agent_file: str) -> Dict[str, Any]:
+    """
+    Load an agent from a single Python file.
+    
+    Args:
+        agent_file: Path to the agent Python file
+        
+    Returns:
+        Dictionary containing agent data and functions
+    """
+    if not os.path.isfile(agent_file):
+        raise ValueError(f"Agent file does not exist: {agent_file}")
+    
+    # Load agent module
+    try:
+        agent_dir = os.path.dirname(agent_file)
+        filename = os.path.basename(agent_file)
+        module_name = os.path.splitext(filename)[0]
+        
+        spec = importlib.util.spec_from_file_location(module_name, agent_file)
+        if spec is None or spec.loader is None:
+            raise ValueError(f"Could not load agent module: {agent_file}")
+        
+        agent_module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = agent_module
+        spec.loader.exec_module(agent_module)
+        
+        # Check if required attributes and functions are defined
+        required_attributes = ["AGENT_NAME", "AGENT_DESCRIPTION", "AGENT_VERSION"]
+        for attr in required_attributes:
+            if not hasattr(agent_module, attr):
+                raise ValueError(f"Missing required attribute '{attr}' in agent module: {agent_file}")
+        
+        if not hasattr(agent_module, "process_command"):
+            raise ValueError(f"Missing required function 'process_command' in agent module: {agent_file}")
+        
+        # Create agent object
+        agent = {
+            "config": {
+                "name": agent_module.AGENT_NAME,
+                "description": agent_module.AGENT_DESCRIPTION,
+                "version": agent_module.AGENT_VERSION
+            },
+            "dir": agent_dir,
+            "process_command": agent_module.process_command
+        }
+        
+        # Add optional functions if they exist
+        optional_functions = ["initialize", "cleanup", "get_status"]
+        for func_name in optional_functions:
+            if hasattr(agent_module, func_name):
+                agent[func_name] = getattr(agent_module, func_name)
+        
+        # Initialize agent if function exists
+        if "initialize" in agent:
+            agent["initialize"](agent)
+        
+        return agent
+    
+    except Exception as e:
+        raise ValueError(f"Error loading agent module: {str(e)}")
 
 # Example usage
 if __name__ == "__main__":

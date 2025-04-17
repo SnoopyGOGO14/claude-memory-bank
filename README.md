@@ -85,4 +85,81 @@ python library_agent_cli.py
 
 # Run the agent via the loader
 python agent_example.py
-``` 
+```
+
+# Agent Web Interface
+
+A web-based interface for interacting with AI agents.
+
+## Features
+
+- Modern, responsive UI built with Bootstrap 5
+- Support for multiple agents with dynamic loading
+- Real-time interaction with agents through a chat interface
+- Browser compatibility check (Chrome required)
+- Code block formatting in agent responses
+
+## Directory Structure
+
+```
+agent-repo/
+├── static/
+│   ├── css/
+│   │   └── style.css
+│   ├── js/
+│   │   └── main.js
+│   └── img/
+├── templates/
+│   ├── index.html
+│   └── browser_error.html
+├── web_interface.py
+├── agent_loader.py
+├── standalone_agent.py
+└── requirements.txt
+```
+
+## Setup
+
+1. Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+2. Run the web interface:
+
+```bash
+python web_interface.py
+```
+
+3. Open your Chrome browser and navigate to:
+
+```
+http://localhost:5000
+```
+
+## Agent Structure
+
+Agents should follow this structure:
+
+```
+AGENTS/
+└── AgentName/
+    ├── config.json
+    └── agent.py
+```
+
+Where:
+- `config.json` contains agent metadata (name, description, version, etc.)
+- `agent.py` implements the required functions, particularly `process_command()`
+
+## Adding a New Agent
+
+1. Create a new directory in the `AGENTS/` folder
+2. Add a `config.json` file with agent metadata
+3. Create an `agent.py` file with the required functions
+4. Restart the web interface
+
+## License
+
+MIT 

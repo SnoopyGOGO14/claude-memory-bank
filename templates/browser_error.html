@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Not Supported - Agent Interface</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-container {
+            max-width: 600px;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .chrome-logo {
+            width: 80px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <img src="https://www.google.com/chrome/static/images/chrome-logo.svg" alt="Chrome Logo" class="chrome-logo">
+        <h1 class="mb-4">Browser Not Supported</h1>
+        <div class="alert alert-warning">
+            <p class="mb-0">This application only works with <strong>Google Chrome</strong>.</p>
+        </div>
+        <p class="mb-4">For the best experience and full functionality, please open this application in Chrome.</p>
+        <a href="https://www.google.com/chrome/" class="btn btn-primary" target="_blank">Download Chrome</a>
+        <hr class="my-4">
+        <p class="text-muted small">If you're already using Chrome and seeing this message, please check if you're in incognito mode or if your browser is identifying as another browser.</p>
+    </div>
+</body>
+</html> 
